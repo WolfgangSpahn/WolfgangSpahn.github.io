@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Wolfgang Spahn" />
+  <meta name="dcterms.date" content="2022-12-14" />
+  <meta name="keywords" content="C++ AST archtecture code static
+analysis" />
+  <title>Discover C++ applications via static code analysis.</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Arial;
+      font-size: 12pt;
+      color: white;
+      background-color: #5e5eff;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: lightgray;
+    }
+    a:visited {
+      color: lightgray;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid white;
+      border-bottom: 1px solid white;
+    }
+    th {
+      border-top: 1px solid white;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #2a211c;
+        color: #bdae9d;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #bdae9d;  padding-left: 4px; }
+    div.sourceCode
+      { color: #bdae9d; background-color: #2a211c; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ffff00; } /* Alert */
+    code span.an { color: #0066ff; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { } /* Attribute */
+    code span.bn { color: #44aa43; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #43a8ed; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #049b0a; } /* Char */
+    code span.cn { } /* Constant */
+    code span.co { color: #0066ff; font-weight: bold; font-style: italic; } /* Comment */
+    code span.do { color: #0066ff; font-style: italic; } /* Documentation */
+    code span.dt { text-decoration: underline; } /* DataType */
+    code span.dv { color: #44aa43; } /* DecVal */
+    code span.er { color: #ffff00; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #44aa43; } /* Float */
+    code span.fu { color: #ff9358; font-weight: bold; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #0066ff; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #43a8ed; font-weight: bold; } /* Keyword */
+    code span.op { } /* Operator */
+    code span.pp { font-weight: bold; } /* Preprocessor */
+    code span.sc { color: #049b0a; } /* SpecialChar */
+    code span.ss { color: #049b0a; } /* SpecialString */
+    code span.st { color: #049b0a; } /* String */
+    code span.va { } /* Variable */
+    code span.vs { color: #049b0a; } /* VerbatimString */
+    code span.wa { color: #ffff00; font-weight: bold; } /* Warning */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <style>
+    pre.sourceCode{
+      padding: 10px;
+      background-color: 3e3eff;
+      }
+      figure{
+      overflow: scroll;
+      }
+    img {
+      max-width: 125%;
+      }
+    figcaption{padding: 4px;}
+    code {
+      color: #c6c6eb;
+      font-size: 85%;
+      }
+    hr {background-color: #fdfdfd;}
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>LAVA</b> - <b>L</b>ongterm <b>AVA</b>ilability
+<hr>
+
+<header id="title-block-header">
+<h1 class="title">Discover C++ applications via static code
+analysis.</h1>
+<p class="subtitle">A concrete example</p>
+<!--<p> Wolfgang Spahn(2022-12-14)</p>-->
+</header>
+<figure>
+<img src="figures/pexels-khaled-reese-702139.gray.jpg"
+style="margin:auto; display: block;" width="400"
+alt="Foto by Khaled Reese" />
+<figcaption aria-hidden="true">Foto by Khaled Reese</figcaption>
+</figure>
+<p>When complexity is beyond basic and documentation is pure,
+discovering existing C++ frameworks can be difficult. This is where
+automatic mapping of C++ entities into knowledge frames (Minski’s
+classic AI approach to knowledge representation <span class="citation"
+data-cites="Minsky1975MinskysFS">[1]</span>) via static code analysis
+can help. To show the benefit, let’s discover the C++ lib OGDF, a
+powerful open graph drawing framework<span class="citation"
+data-cites="uosOGDFx2013">[2]</span>. With its 500kLOCs of header and
+source lines, it is already a fairly complex framework. Failure to
+initialize elements will cause runtime errors. So usage is not obvious,
+and good documentation, especially on what needs what, and on do and
+don’t, would help.</p>
+<p>In this particular case, We have a getting-started-guide, examples,
+and papers addressing the scientific background. And of course a doxygen
+run, which collects doc strings. But it leaves quite a lot of areas
+open. Quite a few doc-strings are just repeating what has been already
+said in the class or function name. That’s not nice but it reflects
+daily live of C++ programmers - in companies and academics.</p>
+<p>What can we do to get started in an efficient way? Let’s harvest
+implicit knowledge.</p>
+<h1 id="build-a-knowledge-graph">Build a knowledge graph</h1>
+<p>Even when not written down, the knowledge is implicitly there. Code
+has been created by humans, which need to think in language constructs.
+We postulate that C++ constructs must in some way refer to language
+ones. Where are the domain names of context, modules, concepts,
+entities, objects, instances, rules, relations, attributes etc.. How to
+they relate, in what way? And in each category there will be some
+hierarchy as otherwise no human could have developed the framework. But
+how to make this a practical approach?</p>
+<figure>
+<img src="figures/Car.png" style="margin:auto; display: block;"
+alt="A knowledge graph of a car" />
+<figcaption aria-hidden="true">A knowledge graph of a car</figcaption>
+</figure>
+<p>To avoid to open the full complexity of knowledge representation and
+natural language understanding, we start with a quite simple strategy.
+Map C++ to just a few natural language constructs, which are used to
+collect knowledge frames in classical AI (f.Ex. concept net or wordnet)
+and store them in a knowledge graph.</p>
+<ul>
+<li>Parse the Code to towards its AST representation.</li>
+<li>Select an entry point, which represents the frame</li>
+<li>Map C++ constructs to natural language ones.</li>
+</ul>
+<p>In a sense, we create a knowledge frame or archetype from the C++
+code, which should describe the domain knowledge implicitly present in
+the code. We get a graph showing the base concepts (framed in red), the
+concepts we need to select for implementation (filled in black), the
+entry point (filled in red), the initial call call(GA), and their
+<code>isA</code> and <code>has_m_X</code> relations. The graph produces
+an implementation space of 20-50 header files in a fairly compact way.
+It is important to note that it does not just cover one, no it covers a
+full family of behaviors.</p>
+<figure>
+<img src="figures/EmptyTemplate.png"
+style="margin:auto; display: block;"
+alt="Result of static code analysis and the mapping C++ constructs into NLP concepts and relations, to get a big picture." />
+<figcaption aria-hidden="true">Result of static code analysis and the
+mapping C++ constructs into NLP concepts and relations, to get a big
+picture.</figcaption>
+</figure>
+<h1 id="learn-from-the-graph">Learn from the Graph</h1>
+<p>The graph is quite compact. In AI talk it’s an archetype and covers
+all layout variants you can implement with
+<code>PlanarizationLayout</code>.</p>
+<p>There are three fundamental concepts and 7 base concepts</p>
+<ul>
+<li><code>Module</code>: Base concept for all algorithms
+implemented</li>
+<li><code>CCLayoutPackModule</code>: Packs connected components (CC) in
+a layout engine</li>
+<li><code>LayoutModule</code> : Base concept of all e2e engines
+implemented</li>
+<li><code>CrossingMinimizationModule</code>: Minimizes crossing of edges
+of non planar graph</li>
+<li><code>EdgeInsertionModule</code>: Inserts edges in an optimized
+way</li>
+<li><code>VariableEmbeddingInserterBase</code> (inherits
+<code>EdgeInsertionModule</code>)</li>
+<li><code>EmbedderModule</code>: Algorithms which embeds graphs in some
+way</li>
+<li><code>LayoutPlanRepModule</code>: Algorithms which calculate layouts
+of planar graphs</li>
+</ul>
+<p>By following the <code>has_m_X</code> dependencies we can envision
+how to implement a <code>PlanarizationLayout</code>:</p>
+<ul>
+<li>construct the entry class <code>myPlanaritationLayout</code> and
+assure that</li>
+<li>all <code>has_m_X</code> concepts are implemented, which are given
+by</li>
+<li>the base classes defined by the <code>isA</code> hierarchy shown in
+the graph</li>
+<li>all attributes are set (not shown) and finally execute</li>
+<li><code>myPlanaritationLayout.call(GA)</code></li>
+</ul>
+<p>Let’s compare this with a real code example. The layout call is
+embedded in a GraphIO context that loads a sample graph data and writes
+the layout to disk, which is another use case we could discover by using
+<code>GraphIO</code> as an entry point.</p>
+<p>Looking at the actual construction of
+<code>PlanerizationLayout</code>, we can confirm our knowledge graph. It
+describes the creation of all concrete instances of the base classes we
+extracted. Some attributes are overridden, others are used as defaults.
+Finally, <code>pl.call(GA)</code> is called. Our graph has captured the
+main concepts needed to write orthogonal planarization layout code in
+one view.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode c++"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> ogdf<span class="op">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    Graph G<span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    GraphAttributes GA<span class="op">(</span>G<span class="op">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      GraphAttributes<span class="op">::</span>nodeGraphics <span class="op">|</span> GraphAttributes<span class="op">::</span>nodeType <span class="op">|</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      GraphAttributes<span class="op">::</span>edgeGraphics <span class="op">|</span> GraphAttributes<span class="op">::</span>edgeType<span class="op">);</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>GraphIO<span class="op">::</span>read<span class="op">(</span>GA<span class="op">,</span> G<span class="op">,</span> <span class="st">&quot;ERDiagram.gml&quot;</span><span class="op">,</span> GraphIO<span class="op">::</span>readGML<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cerr<span class="op"> &lt;&lt;</span> <span class="st">&quot;Could not read ERDiagram.gml&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>node v <span class="op">:</span> G<span class="op">.</span>nodes<span class="op">)</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        GA<span class="op">.</span>width<span class="op">(</span>v<span class="op">)</span> <span class="op">/=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        GA<span class="op">.</span>height<span class="op">(</span>v<span class="op">)</span> <span class="op">/=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    PlanarizationLayout pl<span class="op">;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    SubgraphPlanarizer <span class="op">*</span>crossMin <span class="op">=</span> <span class="kw">new</span> SubgraphPlanarizer<span class="op">;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    PlanarSubgraphFast<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> <span class="op">*</span>ps <span class="op">=</span> <span class="kw">new</span> PlanarSubgraphFast<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    ps<span class="op">-&gt;</span>runs<span class="op">(</span><span class="dv">100</span><span class="op">);</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    VariableEmbeddingInserter <span class="op">*</span>ves <span class="op">=</span> <span class="kw">new</span> VariableEmbeddingInserter<span class="op">;</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    ves<span class="op">-&gt;</span>removeReinsert<span class="op">(</span>RemoveReinsertType<span class="op">::</span>All<span class="op">);</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    crossMin<span class="op">-&gt;</span>setSubgraph<span class="op">(</span>ps<span class="op">);</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    crossMin<span class="op">-&gt;</span>setInserter<span class="op">(</span>ves<span class="op">);</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    pl<span class="op">.</span>setCrossMin<span class="op">(</span>crossMin<span class="op">);</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    EmbedderMinDepthMaxFaceLayers <span class="op">*</span>emb <span class="op">=</span> <span class="kw">new</span> EmbedderMinDepthMaxFaceLayers<span class="op">;</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    pl<span class="op">.</span>setEmbedder<span class="op">(</span>emb<span class="op">);</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    OrthoLayout <span class="op">*</span>ol <span class="op">=</span> <span class="kw">new</span> OrthoLayout<span class="op">;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    ol<span class="op">-&gt;</span>separation<span class="op">(</span><span class="fl">20.0</span><span class="op">);</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    ol<span class="op">-&gt;</span>cOverhang<span class="op">(</span><span class="fl">0.4</span><span class="op">);</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    pl<span class="op">.</span>setPlanarLayouter<span class="op">(</span>ol<span class="op">);</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    pl<span class="op">.</span>call<span class="op">(</span>GA<span class="op">);</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    GraphIO<span class="op">::</span>write<span class="op">(</span>GA<span class="op">,</span> <span class="st">&quot;output-ERDiagram.gml&quot;</span><span class="op">,</span> GraphIO<span class="op">::</span>writeGML<span class="op">);</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    GraphIO<span class="op">::</span>write<span class="op">(</span>GA<span class="op">,</span> <span class="st">&quot;output-ERDiagram.svg&quot;</span><span class="op">,</span> GraphIO<span class="op">::</span>drawSVG<span class="op">);</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the example above, 5 concepts have been derived from a base that
+is represented by 1 slot in the archetype.</p>
+<ul>
+<li><code>OrthoLayout:LayoutPlanRepModule</code></li>
+<li><code>EmbedderMinDepthMaxFaceLayers:EmbedderModule</code></li>
+<li><code>SubgraphPlanarizer:CrossingMinimizationModule</code></li>
+<li><code>PlanarSubgraphFast:LayoutPlanRepModule</code></li>
+<li><code>VariableImbeddingInserter:VariableImbeddingInserterBase</code></li>
+</ul>
+<p>Which gives a filled frame:</p>
+<figure>
+<img src="figures/FilledTemplate.gray.png"
+style="margin:auto; display: block;"
+alt="When comparing with a code example we can fill the frame and get our basic assumptions confirmed." />
+<figcaption aria-hidden="true">When comparing with a code example we can
+fill the frame and get our basic assumptions confirmed.</figcaption>
+</figure>
+<p>As expected one slot is not filled, as it is dealing with connected
+components, which is not applicable to our graph type (no components
+used).</p>
+<p>We saw just one way to fill the class inheritance for the empty
+slots. As you might guess, the archetype can be filled in quite
+different ways. It presents the space of all potential implementations.
+Some are intended, others are just misuse (which will fail during
+runtime). To make this explicitly written down is another obvious
+benefit.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Fur sure it’s not always as simple to recover main concepts in C++
+code. Typically you have to map more constructs of C++. Friend would be
+a next step. And you will see more complex dependencies. But the
+<code>isA</code>, <code>hasX</code> hierarchy is always a good starting
+point. It gives a dense knowledge graphs of concepts, covering a wide
+area of code.</p>
+<p>By comparing the resulting concepts with usage examples, the
+knowledge graph can be verified. Valuable explicit knowledge can be
+created. We get an initial understanding of the code from which we can
+proceed.</p>
+<p>I think this is a good way to develop trust in the comprehension, and
+to create top level documentation automatically, which assures proper
+usage of the framework.</p>
+<p>Via this we have a fast path to build much more comprehensive
+documentation/understanding from code not only in the graph drawing
+world.</p>
+<h1 class="unnumbered" id="references">References</h1>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-Minsky1975MinskysFS" class="csl-entry"
+role="doc-biblioentry">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">M.
+Minsky, <span>“Minsky’s frame system theory,”</span> in <em>Theoretical
+issues in natural language processing</em>, 1975. </div>
+</div>
+<div id="ref-uosOGDFx2013" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[2] </div><div
+class="csl-right-inline"><span>“<span>O</span><span>G</span><span>D</span><span>F</span>
+&amp;#x2013; <span>O</span>pen <span>G</span>raph <span>D</span>rawing
+<span>F</span>ramework — ogdf.uos.de.”</span> <a
+href="https://ogdf.uos.de/" class="uri">https://ogdf.uos.de/</a>. </div>
+</div>
+</div>
+</body>
+</html>

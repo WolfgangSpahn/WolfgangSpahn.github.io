@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Wolfgang Spahn" />
+  <meta name="dcterms.date" content="2023-01-31" />
+  <meta name="keywords" content="critical infrastructure network
+planning linear programing end-2-end" />
+  <title>How to protect critical network infrastructure against sabotage?</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Arial;
+      font-size: 14pt;
+      color: white;
+      background-color: #5e5eff;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: lightgray;
+    }
+    a:visited {
+      color: lightgray;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid white;
+      border-bottom: 1px solid white;
+    }
+    th {
+      border-top: 1px solid white;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <style>
+    pre.sourceCode{
+      padding: 10px;
+      background-color: 3e3eff;
+      }
+      figure{
+      overflow: scroll;
+      }
+    img {
+      max-width: 125%;
+      }
+    figcaption{padding: 4px;}
+    code {
+      color: #c6c6eb;
+      font-size: 85%;
+      }
+    hr {background-color: #fdfdfd;}
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>LAVA</b> - <b>L</b>ongterm <b>AVA</b>ilability
+<hr>
+
+<header id="title-block-header">
+<h1 class="title">How to protect critical network infrastructure against
+sabotage?</h1>
+<p class="subtitle">use optimal network planning to build resilient
+networks</p>
+<!--<p> Wolfgang Spahn(2023-01-31)</p>-->
+</header>
+<p>Recent events have highlighted the vulnerability of critical
+infrastructure by exploiting local points of attack, but with a global
+impact. A realistic resilience plan must identify these points of
+attack, quickly eliminate them and avoid them in the future. Today’s
+‘fibre first, paths and services second’ design approach does not
+address this properly. It accumulates vulnerabilities in the late stages
+of network deployment as new services compete with those already in
+service. Network resilience to sabotage is not optimized. The attack
+angles of a potential saboteur with global impact remain hidden.</p>
+<figure>
+<img src="figures/pexels-stefan-gabriel-naghi-912617.jpg"
+style="margin:auto; display: block;" width="400"
+alt="Uninterrupted evening services for DB trains (Foto by Stefan Gabriel)" />
+<figcaption aria-hidden="true">Uninterrupted evening services for DB
+trains (Foto by Stefan Gabriel)</figcaption>
+</figure>
+<p>Only by analysing all levels of the network - under all constraints
+for a complete build - can you get a true understanding of how to
+protect networks against sabotage. This approach has been known for some
+time, but has been considered too difficult and complex to put into
+practice.</p>
+<p>In this article, I show that with today’s hardware and recent
+advances in linear programming, end-2-end analysis becomes feasible. It
+paves the way for practical end-2-end planning and analysis of optimal
+resilient networks that can be applied to existing and newly planned
+networks.</p>
+<h1 id="introduction">Introduction</h1>
+<p>In October 2022, the northern part of Deutsche Bahn’s (DB) GSM-R
+communications network was completely sabotaged by just two cuts in its
+fiber optic cables at two distant locations<span class="citation"
+data-cites="wikipediaAnschlagDB">[1]</span>. All trains stopped.
+Thousands of passengers were unable to reach their destinations. The
+depth of insight into DB’s fiber topology and the simplicity of the
+attack raise great concern. It drastically illustrates the importance
+and vulnerability of digital communications to critical
+infrastructure.</p>
+<p>What can be done? The obvious is not possible: Just to increase the
+surveillance, isolation and protection of the entire infrastructure
+along the 34,000 km of German railroad tracks is far too difficult. A
+realistic plan must focus on the most critical elements. This requires a
+good understanding of the network’s angles of attack and points of
+failure. Only then can additional redundancy and protection measures
+achieve the goal of preventing future attackers from disrupting extended
+services with so little effort.</p>
+<p>In other words, we need to ensure that our network design and changes
+to it provide security and robustness in the best and most efficient way
+possible.</p>
+<p>Today’s design approach is not 100% helpful in this situation, as
+current network planning defines optimal paths, but not an optimal
+network, which leaves room for improvement.</p>
+<p>Why is this a problem? What can be done better?</p>
+<h1 id="network-planning">Network Planning</h1>
+<p>Communication networks are built on a hierarchical technology stack.
+Users or their applications define data transport by specifying
+source-to-destination forwarding <a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a>, which is sent along
+paths that span multiple fiber links that carry packets from node to
+node. Clearly, the attack space is large, diverse, and heavily
+influenced by the flow capabilities predefined by the network design. It
+is difficult for the operations team to determine, where the fiber
+layout has opened up inherent vulnerabilities<a href="#fn2"
+class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>.</p>
+<p>Just to name a few examples where we might suffer:</p>
+<ul>
+<li><p>Fiber redundancy layout may not be robust. Redundant paths (see
+sec. <strong>¿sec:sec2?</strong>) run over different fibers, but are
+inadvertently bundled in the same cable or duct. Thus, destruction of
+one cable or channel segment will also cut the redundant path. Not
+good!</p></li>
+<li><p>The timing may change too drastically after the redundancy switch
+over, so the real-time service cannot handle this change in
+characteristics and will not survive the event.</p></li>
+<li><p>Congestion may occur after traffic is rerouted, which degrades
+the quality of service, which again does not ensure the
+service.</p></li>
+</ul>
+<p>To complicate matters, modern networks use a wide range of
+technologies. (OTN,Ethernet/RSTP, MPLS-TP, IP, IP/MPLS, TSN, SDN, to
+name a few) to build the network topology.</p>
+<p>Sure, they all define traffic in very different ways, but they all
+ultimately define, over what path and fiber, and with what
+characteristics, quality and protection, data will flow through the
+network. So the question, “Do we have a proper network design to support
+the specification?” remains a constant:</p>
+<ul>
+<li>Have we chosen the right fiber layout that will give the traffic the
+characteristics we want? and does not provide easy angles of
+attack?</li>
+<li>Does critical data travel through protected paths that are free of
+congestion?</li>
+<li>Can a path be completely taken over by a well-separated, protecting
+equivalent?</li>
+</ul>
+<figure>
+<img src="figures/fig_optimal_base.inv.gray.png" id="fig:figure0"
+style="margin:auto; display: block;" width="400"
+alt="Figure 1: An example infrastructure: 9 nodes and 18 fiber are available to setup the network." />
+<figcaption aria-hidden="true">Figure 1: An example infrastructure: 9
+nodes and 18 fiber are available to setup the network.</figcaption>
+</figure>
+<p>To give a practical example to shed light on this challenge please
+have a look into figure [fig. 1;]</p>
+<p>We just consider a small core segment of 3 nodes 0, 1, 2, which are
+connected any to any, and which shall serve 6 access nodes 3, 4, 5, 6, 7
+and 8. For connectivity there are 18 fiber links available.</p>
+<h1 id="multi-level-constraints">Multi level Constraints</h1>
+<p>To reflect real complexity, we consider multiple layers, but with
+only a few constraints to keep it digestible<a href="#fn3"
+class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. We
+first define rules in English to later translate them into mathematical
+formulas.</p>
+<h2 id="constraints">Constraints</h2>
+<p>Since devices are limited in fiber ports (or SFPs), we have to choose
+which fiber can be served.</p>
+<ul>
+<li><strong>Rule1:</strong> <em>Each node can only support up to 4 SFPs:
+so not all fiber links can be served! Choose the best ones!</em></li>
+</ul>
+<p>We consider an end-to-end communication service that spans multiple
+nodes: A real-time critical application where server needs to talk to a
+number of clients and vice versa without interruption:</p>
+<ul>
+<li><strong>Rule2:</strong> <em>Nodes 3,4..8 connect to node 0
+redundantly. A protecting path can take over with the least change in
+characteristics.</em></li>
+</ul>
+<p>Connecting two nodes in critical situations means relying on a path
+from source to destination that is kept alive under all circumstances,
+even if some fiber links <a href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a> stop working. In order to protect
+against failure, an alternate path must be able to take over<a
+href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a>.</p>
+<ul>
+<li><strong>Rule3:</strong> <em>There is one working and one protected
+path. These two pathes are disjunct (don’t share any link or
+intermediate node).</em></li>
+</ul>
+<p>To respect real-time, switch over has to be fast<a href="#fn6"
+class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> and
+protecting path needs to mirror working paths’ characteristics as close
+as possible.</p>
+<ul>
+<li><strong>Rule4:</strong> <em>To assure similar timing there should be
+not more than 1 hop difference between working and protecting path<a
+href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a>.</em></li>
+</ul>
+<p>Finally, we have cost as a competing requirement. Together with all
+the technical constraints we want to find a global optimum:</p>
+<ul>
+<li><p>Avoid costs of optical fiber connection modules (small formfactor
+plugable SFP)</p>
+<p><strong>Rule5:</strong> <em>Use as little fiber as possible. Core
+node SFPs are more expensive than aggregation SFPs, so avoid SFPs at
+[0,1,2].</em></p></li>
+<li><p>But if invested, expensive optics must be used:</p>
+<p><strong>Rule6:</strong> <em>Core hops are preferred over aggregation
+hops. Keep traffic on the inner ring [0,1,2].</em></p></li>
+</ul>
+<h1 id="tradional-network-design">Tradional network design</h1>
+<p>In traditional design approaches, you start with an ad hoc fiber
+layout that satisfies the physical constraints. It is based on the
+assumption that this layout will provide a path routing that meets the
+specifications. Let’s see if this is justified.</p>
+<h2 id="ad-hoc-fibre-layout-assumptions">Ad hoc fibre layout
+assumptions</h2>
+<p>With a little experience and intuition, we get three obvious starting
+points<a href="#fn8" class="footnote-ref" id="fnref8"
+role="doc-noteref"><sup>8</sup></a>.</p>
+<p>In a first attempt, we work with two rings (see fig. 2;), a core ring
+[1,2,3] and an outer access ring [4,5,6,7,8] and connect them with three
+joints. In a sense, our design will consist of three rings<a href="#fn9"
+class="footnote-ref" id="fnref9"
+role="doc-noteref"><sup>9</sup></a>.</p>
+<p>Rings are good for redundant design because they naturally provide
+two paths to each node. The use of SFPs at the core nodes is optimal. We
+only need 3 (see fig. 3;).</p>
+<p>On the other hand, the long distance from 0 to 3 - neglecting the
+direct path - shows the disadvantage of this layout. Clearly, we will
+never get similar characteristics for the working and protecting paths.
+This gives us a first heuristic rule: pay attention to the size of your
+rings.</p>
+<figure>
+<img src="figures/fig_sol1.inv.gray.png" id="fig:adhoc1"
+style="margin:auto; display: block;"
+alt="Figure 2: Adhoc1 - Fibre and node layout with only 3 SFPs needed per core node" />
+<figcaption aria-hidden="true">Figure 2: Adhoc1 - Fibre and node layout
+with only 3 SFPs needed per core node</figcaption>
+</figure>
+<p>Since ring size is an issue, let’s make the rings smaller, which
+gives better length differences. But still for connection (0,3) a delta
+between working and protecting path of only 1 is not possible!</p>
+<figure>
+<img src="figures/fig_sol2.inv.gray.png" id="fig:adhoc2"
+style="margin:auto; display: block;"
+alt="Figure 3: Adhoc2 - Fibre and node layout with 4 SFP core count(g)" />
+<figcaption aria-hidden="true">Figure 3: Adhoc2 - Fibre and node layout
+with 4 SFP core count(g)</figcaption>
+</figure>
+<p>So let’s reduce the ring size even further. We arrive at the design
+shown in Figure[fig. 4;]. This should do it. Will it? We will see.</p>
+<figure>
+<img src="figures/fig_sol3.inv.gray.png" id="fig:adhoc3"
+style="margin:auto; display: block;"
+alt="Figure 4: Adhoc3 - Another fiber and node layout with 4 SFP core count(b)" />
+<figcaption aria-hidden="true">Figure 4: Adhoc3 - Another fiber and node
+layout with 4 SFP core count(b)</figcaption>
+</figure>
+<h2 id="find-the-best-path">Find the best path</h2>
+<p>Once the fiber layout is established, network routing protocols,
+topology protocols, orchestrators or managers can do their work.</p>
+<p>Whatever technology is used, they all look for the best path <a
+href="#fn10" class="footnote-ref" id="fnref10"
+role="doc-noteref"><sup>10</sup></a> from source to destination. The
+more advanced approaches are aware of protection needs, so they will
+optimize working and protecting paths together to ensure that they are
+disjunctive.</p>
+<p>More ambitious algorithms will even try to optimize link capacities.
+They will create new paths along underutilized links to distribute
+bandwidth more evenly<a href="#fn11" class="footnote-ref" id="fnref11"
+role="doc-noteref"><sup>11</sup></a>. This is good for capacity
+constraints but creates a natural bias toward increasing complexity.
+More and more difficult compromises come later in the build.</p>
+<p>In short, we can conclude: Current network planning defines optimal
+paths, but not an optimal network.</p>
+<!-- Unfortunately, the more we fill the network, the more limitations will appear. -->
+<p>Let’s look at our example. When routing our ad hoc option shown in
+the figure <span class="math inline">\(\ref{fig:adhoc3}\)</span>, the
+paths for connection (0-4) and (0-5) come out fine. Not much of a delta.
+They are disjunct and well separated. Good job, router! But for
+connection (0-6) we cannot find a protected pair, that satisfies all the
+rules, either the difference in hops between the working and protected
+paths is too high or they are not separated. Not good!</p>
+<figure>
+<img src="figures/fig_sol3_fail1.inv.gray.png"
+style="margin:auto; display: block;"
+alt="The difference in hops of working and protected paths is too high" />
+<figcaption aria-hidden="true">The difference in hops of working and
+protected paths is too high</figcaption>
+</figure>
+<figure>
+<img src="figures/fig_sol3_fail2.inv.gray.png"
+style="margin:auto; display: block;"
+alt="or they are not separated (b)." />
+<figcaption aria-hidden="true">or they are not separated
+(b).</figcaption>
+</figure>
+<p>As we have already seen, the other two options are even worse.
+Neither can make the difference in hop count equal to or less than
+1.</p>
+<p>As you can imagine. This can quickly become very frustrating and
+complex. Do we need core routers with 6 SFP ports? Or should we just try
+a different choice of active fiber? Should we go back to the drawing
+board and start over again, or should we invest in more hardware? It’s a
+quite an effort and there is no guarantee that it will work this
+time.</p>
+<p>Is there a better way? Let’s see.</p>
+<h1
+id="multi-level-optimal-solution-using-linear-programming.">Multi-level
+optimal solution using linear programming.</h1>
+<p>The industry has known for a long time that current approaches to
+network planning do not give us an optimal solution. We would have to
+optimize all levels and constraints at the same time. The method of
+choice is linear programming, a mathematical optimization scheme, that
+is well suited to this task, but has long been considered too difficult
+and too machine-intensive.</p>
+<p>But times are changing. Methods and algorithms that have been dormant
+for many years due to lack of computing power and reluctance to dive
+into mathematics, are finally shining<span class="citation"
+data-cites="Jablonský2015">[2]</span>. The current success in AI is a
+very prominent example.</p>
+<p>With today’s laptops, our small problem can be solved in
+milliseconds. For realistic networks, such as the German mobile backhaul
+and FFTH network, optimal solutions were computed as early as ten years
+ago. These models were huge, but could be solved in minutes to hours.
+<span class="citation"
+data-cites="GroetschelRaackWerner2013">[3]</span></p>
+<h2 id="optimal-solution">Optimal Solution</h2>
+<p>Transformed into standard form our problem can be solved by, for
+example with COIN|OR <span class="citation"
+data-cites="coinor">[4]</span>. This gives us the solution for the
+network topology shown in fig. 5; and fig. 6;} <a href="#fn12"
+class="footnote-ref" id="fnref12"
+role="doc-noteref"><sup>12</sup></a></p>
+<figure>
+<img src="figures/fig_optimal_fibers.inv.gray.png"
+id="fig:fig_opt_fibers" style="margin:auto; display: block;" width="400"
+alt="Figure 5: Optimal Solution: Fiber layout and respective metric." />
+<figcaption aria-hidden="true">Figure 5: Optimal Solution: Fiber layout
+and respective metric.</figcaption>
+</figure>
+<p>The optimal network is asymmetric and uses 2 more fibers than our ad
+hoc trials before. Nonetheless, the resource utilization is well within
+the limits.</p>
+<p>You can convince yourself that all constraints are fulfilled at all
+levels. Paths are disjunct and number of hops differ by at most 1.</p>
+<figure>
+<img src="figures/fig_optimal_paths.inv.gray.png" id="fig:fig_opt_paths"
+style="margin:auto; display: block;" width="400"
+alt="Figure 6: Optimal Solution: All protected paths fulfill the constrains." />
+<figcaption aria-hidden="true">Figure 6: Optimal Solution: All protected
+paths fulfill the constrains.</figcaption>
+</figure>
+<p>Have you seen this option? If not, don’t worry, the solution is not
+symmetric, so it’s difficult to find. In more realistic scenarios we
+would have many more parameters and no chance to find the optimum by
+hand anyway.</p>
+<p>Not only when starting from scratch, but also for already deployed
+situations, this method helps. Formulating constraints in hard
+mathematical facts gives us an objective view of our status quo and its
+deviation from optimal. In my opinion, this is a proper and transparent
+way to identify angles of attack and ultimately plan defense.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Recent events have demonstrated the vulnerability of critical
+infrastructure. Any realistic protection plan needs to prioritize and
+identify low hanging fruit.</p>
+<p>I hope I have shown how holistic network planning can help. How we
+can avoid easy points of attack. How to increase the robustness of the
+network design.</p>
+<p>Doing this at all levels and under all constraints -instead of
+relying on an ad hoc initial assumption on fiber layout- has been too
+difficult in the past. Computational requirements and complexity of the
+tools had been too high.</p>
+<p>I think that recent advances in usability, algorithms, and computing
+power will help to approach this in a new complete way. Currently, there
+is no plug-and-play software available. Formulating the model and
+defining the mathematical constraints requires a background in network
+engineering, requirements management, and mathematical optimization.</p>
+<p>If you have experience in this area, have remarks/questions, or would
+like to know more about how to do this in larger scale with your network
+and team, please contact me. I am always open to interesting discussions
+and challenges.</p>
+<h1 class="unnumbered" id="references">References</h1>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-wikipediaAnschlagDB" class="csl-entry"
+role="doc-biblioentry">
+<div class="csl-left-margin">[1] </div><div
+class="csl-right-inline"><span>“<span>A</span>nschlag auf die
+<span>D</span>eutsche <span>B</span>ahn am 8. <span>O</span>ktober 2022
+– <span>W</span>ikipedia — de.wikipedia.org.”</span> <a
+href="https://de.wikipedia.org/wiki/Anschlag_auf_die_Deutsche_Bahn_am_8._Oktober_2022"
+class="uri">https://de.wikipedia.org/wiki/Anschlag_auf_die_Deutsche_Bahn_am_8._Oktober_2022</a>.
+</div>
+</div>
+<div id="ref-Jablonský2015" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">J.
+Jablonský, <span>“Benchmarks for current linear and mixed integer
+optimization solvers.”</span> <em>Acta Univ. Agric. Silvic. Mendel.
+Brun.</em>, vol. 63(6), pp. 1923–1928, 2015, doi: <a
+href="https://doi.org/10.11118/actaun201563061923">10.11118/actaun201563061923</a>.
+</div>
+</div>
+<div id="ref-GroetschelRaackWerner2013" class="csl-entry"
+role="doc-biblioentry">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">M.
+Grötschel, C. Raack, and A. Werner, <span>“Towards optimizing the
+deployment of optical access networks,”</span> <em>EURO Journal on
+Computational Optimization</em>, vol. 2, pp. 17–53, 2013, doi: <a
+href="https://doi.org/10.1007/s13675-013-0016-x">10.1007/s13675-013-0016-x</a>.
+</div>
+</div>
+<div id="ref-coinor" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[4] </div><div
+class="csl-right-inline"><span>“COIN|OR : Open source for the operations
+research community.”</span> <a href="https://www.coin-or.org/"
+class="uri">https://www.coin-or.org/</a>, 2022. </div>
+</div>
+</div>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>In some sort, heavily depending on
+the technology used.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Maybe even better known to potential
+attackers!<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>For real networks there are much more
+rules to be considered.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>In a more complete pictures we have
+to consider as well the nodes explictly, which we will fail to do in
+some of our ad hoc examples. You see it?<a href="#fnref4"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p>We name them working and protecting
+paths.<a href="#fnref5" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p>That’s the job of the node, the
+similarity has to be secured by the network!<a href="#fnref6"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7" role="doc-endnote"><p>When network load is low difference
+in hop count determines mainly the real-time behaviour. By applying
+different kinds of traffic shaping and priority methods, all protocols
+try that high prio traffic sees a nearly empty network, where frames
+don’t disturb each other. So the influence of number of hops asymmetry
+will stay, and needs to be managed<a href="#fnref7"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8" role="doc-endnote"><p>Be symmetrical, as humans think in
+symmetry!<a href="#fnref8" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn9" role="doc-endnote"><p>the nodes 0,3,4,5 and 1 would
+represent such a subring. There are two others of the same type.<a
+href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10" role="doc-endnote"><p>You may have trouble imagining that
+traffic in Ethernet/RSTP switched networks is routed along routed paths.
+Yes, there is no explicit path. We are on a switched network where each
+node does MAC-based forwarding. But think about it. Once the RSTP tree
+is set up and MAC learning is done, there is only one way to get from
+source to destination. That’s equivalent to our path. If a link fails,
+the RSTP topology will change to provide an alternate tree, which in
+turn provides a new path. This will create what we call a protection
+path. Of course, in the context of RSTP, paths are a rather verbose
+concept.<a href="#fnref10" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn11" role="doc-endnote"><p>Since packet traffic varies, this
+can only be done statistically.<a href="#fnref11" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn12" role="doc-endnote"><p>Link (2-3) as drawn red, as we want
+and any to any connected core. But it is not needed by any path in our
+example.<a href="#fnref12" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

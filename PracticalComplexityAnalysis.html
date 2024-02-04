@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Wolfgang Spahn" />
+  <meta name="dcterms.date" content="2022-11-14" />
+  <meta name="keywords" content="Complexity C++ AST Code Analysis" />
+  <title>Practical Complexity Analysis</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Arial;
+      font-size: 12pt;
+      color: white;
+      background-color: #5e5effff;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: lightgray;
+    }
+    a:visited {
+      color: lightgray;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid white;
+      border-bottom: 1px solid white;
+    }
+    th {
+      border-top: 1px solid white;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <style>
+    figcaption{padding: 4px;}
+    hr {background-color: #fdfdfd;}
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>LAVA</b> - <b>L</b>ongterm <b>AVA</b>ilability
+<hr>
+
+<header id="title-block-header">
+<h1 class="title">Practical Complexity Analysis</h1>
+<p class="subtitle">… and Reduction</p>
+<!--<p> Wolfgang Spahn(2022-11-14)</p>-->
+</header>
+<figure>
+<img src="figures/complexity.jpg" style="margin:auto; display: block;"
+width="400" alt="Photo by Ola Dapo (Pexels)" />
+<figcaption aria-hidden="true">Photo by Ola Dapo (Pexels)</figcaption>
+</figure>
+<p>Over time, as part of any development cycle, projects accumulate
+unnecessary complexity that should be reduced by people’s efforts, but
+it is not. Under pressure, these activities suffer, so the depth of
+over-complexity and under-documentation is accumulated, which becomes
+more and more difficult to recover.</p>
+<p>When activity grows bigger, it can be increasingly difficult to know
+where and how to apply changes. Decisions get costly and risky. For sure
+some complexity growth is unavoidable as more features are offered to
+the market. But over time knowledge is lost when people are leaving the
+team, implicitly competing concepts have been implemented or abstraction
+gets leaky. Over-complexity and lack of knowledge on status quo is
+accumulating. It generates a general loss of coherence.</p>
+<p>Without counter measure, the sand in the gearbox spreads, creates
+frustration of all involved, it hinders objective reasoning on recovery
+means. Reasoning starts to lack evidence, it can be applied only partly.
+In general arguments get more and more opinionated.</p>
+<p>As a natural tendency, when degradation has pilled up, there is the
+call to redo the whole application in the hope that now the evolution
+will be different. For long living mission critical apps this is very
+painful as robustness needs to regained from day one. There is quite a
+risk, when having reached the same depth of feature and robustness,
+amount of non-coherence is similar. Just it is now in different areas.
+In both scenarios, re-emplementation or not, learning to tackle the
+complexity challenge is a necessity to get a different outcome.</p>
+<figure>
+<img src="figures/PlanarizationLayout.png" id="fig:SWKnowledgeGraph"
+style="margin:auto; display: block;"
+alt="Figure 1: Automatically generated software knowledge graph to regain the big picture" />
+<figcaption aria-hidden="true">Figure 1: <em>Automatically generated
+software knowledge graph to regain the big picture</em></figcaption>
+</figure>
+<p>Over-complexity in the software is often paired with a lack of big
+picture visibility. It is a good idea, to invest some capacity and take
+a step back and to create a verified, complete big picture of the
+software to be omnipresent in the team: What is the meaning and purpose
+of the individual elements, what is its structure and architecture? What
+concepts are localized, what are delocalized? How do all of the pieces
+fit together? With this improved overview detailed analysis can follow,
+team can propose and agree on changes and finally recover the
+situation.</p>
+<p>To create a verified big picture and control the details with it, we
+can learn from best practices in SW documentation, Domain Driven Design,
+and verified machine-readable knowledge bases (see fig. 1).</p>
+<h1 id="recover-specifications">Recover specifications</h1>
+<p>Typically, in situations of lost knowledge, the visibility of
+software specifications is also reduced. Descriptions are missing,
+ambiguous or imprecise, resulting in extra development effort.</p>
+<p>Especially in complex, mission-critical applications, the
+specification of distributed behavior is very important in the daily
+work of developers. However, documentation is often lacking, forcing
+developers to speculate about behavior. Even when supported by code
+comprehension analysis and traces on example cases, it is to be avoided
+as it is very time consuming and error prone.</p>
+<p>Practical formal requirements tools used by the Aerospace, Avionics,
+Healthcare and Fin TEC industries can help restore a common
+understanding of the system specification and its mapping into code.</p>
+<p>To understand your status quo, an analysis of verification and field
+failures is recommended. Whenever they can only be recovered by
+reengineering the code behavior for better understanding, you have a
+good indicator that improving specification coverage should be
+considered.</p>
+<h1 id="finding-the-essence-of-the-application">Finding the essence of
+the application</h1>
+<p>Applying recent methods from the theory of software design, which
+understands a software system as a collection of interacting concepts,
+can restore the understanding of the system at hand.</p>
+<p>It brings the techniques of natural language understanding used by
+conversational applications like Siri into the realm of code and system
+understanding.</p>
+<h1 id="use-static-analysis-to-scale">Use Static Analysis to scale</h1>
+<p>When the system is already years old and the code lines are large,
+some automatic methods must be used to get practical answers with
+affordable effort.</p>
+<p>Using machine based static analysis allows to automatically analyze a
+large amount of code and specifications. It offers interesting options
+to drastically reduce the effort to heal the accumulated degradation,
+guiding team to implement pratical complexity reduction.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Over time projects collect unnecessary complexity, which should be
+reduced by peoples effort, as part of every development cycle, but they
+are not. Under pressure these activity suffer, so depth on
+over-complexity and under-documentation is collected which is more and
+more difficult to recover.</p>
+<p>By the advancements of artificial intelligence conversation systems
+language understanding is now wide schema of usage. This technologies
+can be used as well for specification and code/systems
+understanding.</p>
+<p>The use of machine-based static analysis allows large amounts of code
+and specifications to be analyzed automatically. It offers interesting
+options to drastically reduce the effort to heal the accumulated
+degradation, guiding the team to implement practical complexity
+reduction.</p>
+</body>
+</html>

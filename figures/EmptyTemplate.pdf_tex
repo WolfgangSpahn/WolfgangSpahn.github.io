@@ -1,0 +1,127 @@
+%% Creator: Inkscape 1.2.1 (9c6d41e410, 2022-07-14), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'EmptyTemplate.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{1047bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.42621777)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{EmptyTemplate.pdf}}%
+    \put(0.67012894,0.27399713){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}has_m_crossMin\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{EmptyTemplate.pdf}}%
+    \put(0.41941261,0.27399713){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}has_m_planarLayouter\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{EmptyTemplate.pdf}}%
+    \put(0.35073424,0.36568768){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}call(GA)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{EmptyTemplate.pdf}}%
+    \put(0.56348496,0.36532951){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{EmptyTemplate.pdf}}%
+    \put(0.20666189,0.27399713){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}has_m_embedder\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{EmptyTemplate.pdf}}%
+    \put(0.27901146,0.32342407){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}has_m_packer\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{EmptyTemplate.pdf}}%
+    \put(0.45737822,0.19949857){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}has_m_subgraph\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{EmptyTemplate.pdf}}%
+    \put(0.88287966,0.19949857){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}has_m_inserter\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{EmptyTemplate.pdf}}%
+    \put(0.67012894,0.19949857){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{EmptyTemplate.pdf}}%
+    \put(0.45737822,0.13574499){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{EmptyTemplate.pdf}}%
+    \put(0.88287966,0.13574499){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{EmptyTemplate.pdf}}%
+    \put(0.33202006,0.16762178){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{EmptyTemplate.pdf}}%
+    \put(0.88287966,0.07163324){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{EmptyTemplate.pdf}}%
+    \put(0.40956304,0.07163324){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{EmptyTemplate.pdf}}%
+    \put(0.67012894,0.10351003){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{EmptyTemplate.pdf}}%
+    \put(0.20666189,0.10351003){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{EmptyTemplate.pdf}}%
+    \put(0.65696633,0.03975645){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{EmptyTemplate.pdf}}%
+    \put(0.11712034,0.36532951){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{EmptyTemplate.pdf}}%
+    \put(0.20666189,0.19949857){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}isA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=20]{EmptyTemplate.pdf}}%
+    \put(0.41941261,0.32342407){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}PlanarizationLayout\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=21]{EmptyTemplate.pdf}}%
+    \put(0.67012894,0.24570201){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}?\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=22]{EmptyTemplate.pdf}}%
+    \put(0.45737822,0.17120344){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}?\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=23]{EmptyTemplate.pdf}}%
+    \put(0.88287966,0.17120344){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}?\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=24]{EmptyTemplate.pdf}}%
+    \put(0.41941261,0.24570201){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}?\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=25]{EmptyTemplate.pdf}}%
+    \put(0.35073424,0.40078797){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}GA::GraphAttributes\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=26]{EmptyTemplate.pdf}}%
+    \put(0.56348496,0.40078797){\color[rgb]{0.71764706,0.10980392,0.10980392}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}LayoutModule\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=27]{EmptyTemplate.pdf}}%
+    \put(0.88287966,0.10709169){\color[rgb]{0.71764706,0.10980392,0.10980392}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}VariableEmbeddingInserterBase\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=28]{EmptyTemplate.pdf}}%
+    \put(0.40956304,0.10709169){\color[rgb]{0.71764706,0.10980392,0.10980392}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}LayoutPlanRepModule\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=29]{EmptyTemplate.pdf}}%
+    \put(0.67012894,0.17120344){\color[rgb]{0.71764706,0.10980392,0.10980392}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}CrossingMinimizationModule\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=30]{EmptyTemplate.pdf}}%
+    \put(0.40956304,0.03975645){\color[rgb]{0.71764706,0.10980392,0.10980392}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Module\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=31]{EmptyTemplate.pdf}}%
+    \put(0.11712034,0.40078797){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}CCLayoutPackModule\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=32]{EmptyTemplate.pdf}}%
+    \put(0.20666189,0.17120344){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}EmbedderModule\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=33]{EmptyTemplate.pdf}}%
+    \put(0.20666189,0.24570201){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}?\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=34]{EmptyTemplate.pdf}}%
+    \put(0.88287966,0.03975645){\color[rgb]{0.71764706,0.10980392,0.10980392}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}EdgeInsertionModule\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=35]{EmptyTemplate.pdf}}%
+    \put(0.11712034,0.32342407){\color[rgb]{1,1,1}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}?\end{tabular}}}}%
+  \end{picture}%
+\endgroup%

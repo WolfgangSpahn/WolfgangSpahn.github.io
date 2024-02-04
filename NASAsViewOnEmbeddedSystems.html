@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Wolfgang Spahn" />
+  <meta name="dcterms.date" content="2022-10-31" />
+  <meta name="keywords" content="Software Complexity" />
+  <title>NASAs view on how to handle embedded real-time software complexity</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Arial;
+      font-size: 12pt;
+      color: white;
+      background-color: #5e5effff;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: lightgray;
+    }
+    a:visited {
+      color: lightgray;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid white;
+      border-bottom: 1px solid white;
+    }
+    th {
+      border-top: 1px solid white;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <style>
+    figcaption{padding: 4px;}
+    hr {background-color: #fdfdfd;}
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>LAVA</b> - <b>L</b>ongterm <b>AVA</b>ilability
+<hr>
+
+<header id="title-block-header">
+<h1 class="title">NASAs view on how to handle embedded real-time
+software complexity</h1>
+<p class="subtitle">A study from 2007 still valid</p>
+<!--<p> Wolfgang Spahn(2022-10-31)</p>-->
+</header>
+<figure>
+<img src="figures/NASAStudy.png" style="margin:auto; display: block;"
+alt="NASAs study from 2007 [1]" />
+<figcaption aria-hidden="true">NASAs study from 2007 <span
+class="citation" data-cites="nasa2009">[1]</span></figcaption>
+</figure>
+<p>In 2009, after having suffered from various challenges on robustness
+of flight control systems, NASA started an investigation to study “the
+factors that have led to the accelerating growth in flight software size
+and complexity”.</p>
+<p>14 years later embedded real-time software are omnipresent in a wide
+range of industries far beyond space. New software and development
+approaches have been brought in to help engineers not just “rocket
+scientist” to address the challenge. But principles are still the same,
+and even today difficult to fulfill. NASAs report is summarizing well,
+what to consider, and how to master increase in (over)complexity.</p>
+<p>It utilises a very practical definition of complexity “how hard
+something is to understand or verify.”. Which summarizes nicely the
+human and technology aspect, as “to understand”, “to verify” can always
+mean two things the teams needs more help and guidance, or the system is
+per se complex. Maybe too complex for the team or its size to
+handle.</p>
+<p>It provides a workable approach for distinguishing “complexity from
+essential functionality, which comes from vetted requirements and is
+therefore unavoidable, and incidental complexity” that needs to be
+reduced.</p>
+<p>Recommendations on team development, uncoordinated local decisions,
+trade(off) analysis, requirements management, good software
+architecture, doing workarounds versus fixing, fault management
+software, working on platforms, using components off the shelve,
+addressing residual errors are as fresh as of today as they were 15
+years ago, and have to be seen under cultural aspects, not just
+technological ones.</p>
+<p>From <span class="citation"
+data-cites="nasa2007"><strong>nasa2007?</strong></span> :</p>
+<p>“<em>Some of the recommendations summarized above are common sense
+but aren’t common practice. We identified four cultural reasons for the
+current state.</em></p>
+<ul>
+<li><em>First, cost and schedule pressure lead managers and developers
+to reduce or eliminate activities other than the production of code.
+Improvements that require time and training are vulnerable, particularly
+if their benefits are hard to quantify.</em></li>
+<li><em>Second, there is a lack of enforcement; some recommendations
+already exist in NASA documents and/or local practices, but aren’t
+followed, possibly because nobody checks (and because of schedule
+pressure).</em></li>
+<li><em>Third, there is strong pressure to re-use software from a
+previous mission because it is “flight-proven” and presumed to be of
+lower risk. That reasoning sometimes has merit, but can inhibit better
+approaches, particularly when legacy software is partly to blame for
+difficulties on previous missions.</em></li>
+<li><em>Finally, there is no programmatic incentive for project managers
+to “wear the big hat” and contribute to infrastructure and process
+improvement for the benefit of future missions. This can be changed, as
+evidenced by many companies that have transitioned from stovepipe
+product development to product-line practices.</em>”</li>
+</ul>
+<p>Over the years, I have seen very similar issues arise in the
+networking industry. I think it applies to real-time software activities
+in general. The size of the team may change the way you approach it, but
+it does not take away the challenge. The success of initially small
+private space startups tackling even higher complexity shows us the
+importance of managing (over)complexity to achieve success.</p>
+<h1 class="unnumbered" id="references">References</h1>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-nasa2009" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">D.
+Dvorak, <span>“NASA study on flight software complexity,”</span>
+<em>AIAA Infotech at Aerospace Conference and Exhibit and AIAA
+Unmanned...Unlimited Conference</em>, Apr. 2009, doi: <a
+href="https://doi.org/10.2514/6.2009-1882">10.2514/6.2009-1882</a>.
+</div>
+</div>
+</div>
+</body>
+</html>
