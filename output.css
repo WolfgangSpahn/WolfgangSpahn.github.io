@@ -979,10 +979,6 @@ video {
     grid-column: span 3 / span 3;
   }
 
-  .md\:block {
-    display: block;
-  }
-
   .md\:px-24 {
     padding-left: 6rem;
     padding-right: 6rem;
