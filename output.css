@@ -762,6 +762,11 @@ video {
   border-top-width: 2px;
 }
 
+.bg-\[\#282c34\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(40 44 52 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#5e5effff\] {
   background-color: #5e5effff;
 }
