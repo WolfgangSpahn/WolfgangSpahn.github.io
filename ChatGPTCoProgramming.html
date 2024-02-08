@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Wolfgang Spahn" />
+  <meta name="dcterms.date" content="2024-01-31" />
+  <meta name="keywords" content="critical infrastructure network
+planning linear programing end-2-end" />
+  <title>Chat GPT CoProgramming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Arial;
+      font-size: 12pt;
+      color: white;
+      background-color: #282c34;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: lightgray;
+    }
+    a:visited {
+      color: lightgray;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid white;
+      border-bottom: 1px solid white;
+    }
+    th {
+      border-top: 1px solid white;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <style>
+    pre.sourceCode{
+      padding: 10px;
+      background-color: #e6e6e6;
+      }
+    blockquote {
+      color: white;
+      }
+    code {
+      color: #c6c6eb;
+      font-size: 85%;
+      }
+    hr {background-color: #fdfdfd;}
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>DrWSpahn</b>
+<hr>
+
+<header id="title-block-header">
+<h1 class="title">Chat GPT CoProgramming</h1>
+<p class="subtitle">How to use AI as a coworker on a complicated
+task</p>
+<!--<p> Wolfgang Spahn(2024-01-31)</p>-->
+</header>
+<figure>
+<img src="figures/symbolize_collabor.jpg" style="text-align: center;"
+width="300" alt="How GPT-4 imagines its collaboration role." />
+<figcaption aria-hidden="true">How GPT-4 imagines its collaboration
+role.</figcaption>
+</figure>
+<h1 id="introduction">Introduction</h1>
+<p>AI is a great tool for software developers in answering questions
+about knowledge, configuration and how to use xyz package. Beyond that,
+it can quickly become frustrating. A lot of research has been done in
+2023 to improve AI’s reasoning skills. Good results can be achieved by
+going step by step. Just adding “do this step by step” already shows
+better results. But the more you guide it towards the final goal and are
+able to check the intermediate answers, the more impressive the final
+result will be. There are various ways of doing this automatically. But
+using it in a direct dialogue improves the result a lot.</p>
+<p>To illustrate how far you can get, I have put together this dialogue.
+The task is: Let’s make a graph spring layout function for NetworkX. The
+built-in function is not very impressive, and other standalone Python
+packages require C++ or Rust binaries. How can we get this quickly from
+AI? Asking directly does not help. It gives us a suggestion that barely
+works.</p>
+<p>So let’s go step by step like this</p>
+<ul>
+<li><p>do the maths and concepts first,</p></li>
+<li><p>start with a sketch of an implementation,</p></li>
+<li><p>go one step at a time,</p>
+<ul>
+<li>carefully analyse the answer you get</li>
+<li>give concrete feedback what to do next</li>
+</ul></li>
+</ul>
+<p>But remember, you are in the driver’s seat. You have a macro plan of
+how it might work. That’s the key. Only when you have a base do you move
+on to the next level of complexity.</p>
+<p>As you can see below, this kind of co-programming allows you to
+explore the problem, avoid hallucinations and eventually get good
+results. If your plan is flawed, you will run into dead ends. The AI may
+even lead you astray. How you test then becomes very important.</p>
+<p>As a nice side effect, you get documentation of the thought process
+that you would never have written down in the traditional way. All in
+all, it is a huge gain in speed and reproducibility.</p>
+<p>Happy hacking!</p>
+<h1 id="dialog">Dialog</h1>
+<p>Hey AI! I’d like to solve a programming problem with you. Are you up
+for it?</p>
+<blockquote>
+<p><strong>AI</strong>: Of course! I’m here to help. Please go ahead and
+tell me about the programming problem you’re facing.</p>
+</blockquote>
+<p>I would like to draw a graph using a physical spring model. Let’s
+define the force model first. &gt; &gt; - there is a spring force along
+the edge i,j &gt; - we assume every node has a positive charge, so its
+repulsive. &gt; - there should be a minor fixed negative charge to keep
+the nodes centered. &gt; &gt; Could you please write down the math
+first.</p>
+<h2 id="the-problem-definition-and-mathematics">The problem definition
+and mathematics</h2>
+<blockquote>
+<p><strong>AI</strong>: Certainly! To model the graph with a physical
+spring model, we’ll use a combination of forces:</p>
+<ol type="1">
+<li><strong>Spring Force (Hooke’s Law)</strong>: This force acts along
+the edge between two nodes <span class="math inline">\(i\)</span> and
+<span class="math inline">\(j\)</span>. According to Hooke’s Law, the
+force exerted by a spring is proportional to the displacement from its
+rest length. If <span class="math inline">\(d_{ij}\)</span> is the
+distance between nodes <span class="math inline">\(i\)</span> and <span
+class="math inline">\(j\)</span>, and <span
+class="math inline">\(L\)</span> is the natural length of the spring (or
+the desired separation between nodes), the spring force <span
+class="math inline">\(F_{spring}\)</span> is given by:</li>
+</ol>
+<p><span class="math display">\[ F_{spring} = k_s \cdot (d_{ij} - L)
+\]</span></p>
+<p>where <span class="math inline">\(k_s\)</span> is the spring
+constant.</p>
+<ol start="2" type="1">
+<li><strong>Electrostatic Repulsive Force</strong>: Since each node has
+a positive charge, they repel each other. The repulsive force between
+any two nodes <span class="math inline">\(i\)</span> and <span
+class="math inline">\(j\)</span> can be modeled similar to Coulomb’s
+law:</li>
+</ol>
+<p><span class="math display">\[ F_{repulse} = \frac{k_r}{d_{ij}^2}
+\]</span></p>
+<p>where <span class="math inline">\(k_r\)</span> is a constant of
+proportionality for the repulsive force, and <span
+class="math inline">\(d_{ij}\)</span> is the distance between nodes
+<span class="math inline">\(i\)</span> and <span
+class="math inline">\(j\)</span>.</p>
+<p>[…]</p>
+<p><em>(answers with 80 lines of text) It gives a description of the
+forces and dynamics of the problem in the style above, including the
+math of the forces.</em></p>
+</blockquote>
+<p>How would you update the positions after a time step dt?</p>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 80 lines of text) It brings up
+the right mathmatics to solve the dynamics.</em></p>
+</blockquote>
+<h2 id="get-a-first-sketch-and-setup-testing">Get a first sketch and
+setup testing</h2>
+<p>Great, now we have the math. How to implement this with numpy for the
+dynamics and using networkx for the graph?</p>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 25 lines of text (1/2) and
+code (1/2)) Together with a good description how our algorithm is going
+to look like, we get a firsts sketch of python code</em></p>
+</blockquote>
+<p>Please add the forces according to the math.</p>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 27 lines of text(1/3) and code
+(2/3)) We get a code we can try to execute. Again together with short
+description. But how to test this?</em></p>
+</blockquote>
+<p>I think networkx can create random planar graphs. Please use this to
+create a test graph.</p>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 30 lines of text(1/3) and code
+(2/3)) With this I send AI in the wrong direction: it halluzinated there
+is a readom planar graph, but there is none.</em></p>
+</blockquote>
+<p><em>(I need to install packages and execute the code.)</em> I get:
+AttributeError: module ‘networkx’ has no attribute
+‘random_planar_graph’</p>
+<h2 id="we-can-execute-it">We can execute it</h2>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 10 lines of text(1/2) and code
+(1/2)) It corrects itself, describes the alternatives and chooses
+one</em></p>
+</blockquote>
+<p>I get some result. But layout spreads only into one direction. <em>(I
+don’t know what’s going on. Code seams to be ok.)</em> For debugging it
+would be nice to step through the simulation. Can you change the code
+for this</p>
+<figure>
+<img src="figures/Figure_0.png" style="text-align: center;" width="300"
+alt="A first layout, not good. What’s going on here?" />
+<figcaption aria-hidden="true">A first layout, not good. What’s going on
+here?</figcaption>
+</figure>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 27 lines of text(1/3) and code
+(2/3)) It adds a mechnism to plot every step so I can follow the
+dynamics.</em></p>
+</blockquote>
+<h2 id="we-add-damping">We add damping</h2>
+<p>It is good at some steps, but it oscillates. I think we need to add
+damping</p>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 29 lines of text(1/4) and code
+(3/4)) It adds damping.</em></p>
+<figure>
+<img src="figures/Figure_1.png" style="text-align: center;" width="300"
+alt="Somewhat better. But not good." />
+<figcaption aria-hidden="true">Somewhat better. But not
+good.</figcaption>
+</figure>
+</blockquote>
+<p>That’s somewhat better, but the test graph is not fully connected.
+Difficult to judge. Let’s try it with nx.triangular_lattice_graph to get
+e full picture.</p>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 28 lines of text(1/5) and code
+(4/5)) It moves to nx.triangular_lattice_graph.</em></p>
+<figure>
+<img src="figures/Figure_2.png" style="text-align: center;" width="300"
+alt="For the triangular graph we get stuck." />
+<figcaption aria-hidden="true">For the triangular graph we get
+stuck.</figcaption>
+</figure>
+</blockquote>
+<h2 id="we-go-to-3d">We go to 3D</h2>
+<p>Layout does not really get planar. It get’s stuck. I think we have to
+go 3D and the project it back to 2D. What do you think?</p>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 28 lines of text(1/4) and code
+(3/4)) Despite of my rather superficial description it graps the concept
+and modifies the code accordingly</em></p>
+</blockquote>
+<p>there is something wrong I don’t see any movement</p>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 28 lines of text(1/3) and code
+(2/3)) It concludes that wrong parameters do freeze the dynamcis right
+away. It proposes a new set of paramenters, describes why and changes
+the cod accordingly</em></p>
+</blockquote>
+<p>It works great. But sometime the projection is not good. Can we calc
+the major orientation in space, and do a sort of orthogonal
+projection?</p>
+<figure>
+<img src="figures/Figure_3.png" style="text-align: center;" width="300"
+alt="Layout is good, but sometimes only visible from the side" />
+<figcaption aria-hidden="true">Layout is good, but sometimes only
+visible from the side</figcaption>
+</figure>
+<h2 id="we-improve-the-projection-to-2d">We improve the projection to
+2D</h2>
+<blockquote>
+<p><strong>AI</strong>: <em>(answers with 20 lines of text(1/3) and code
+(2/3)) It follows my recommendation and comes up with an algorithm and
+package how to do this.</em></p>
+</blockquote>
+<p>Wow, finally it works very good.</p>
+<figure>
+<img src="figures/Figure.png" style="text-align: center;" width="300"
+alt="A 3D spring particle layout now looking good" />
+<figcaption aria-hidden="true">A 3D spring particle layout now looking
+good</figcaption>
+</figure>
+<blockquote>
+<p><strong>AI</strong>: You’re welcome! I’m glad to hear that the
+solution worked well for you. If you have any more questions in the
+future, whether they’re about programming, data visualization, or
+anything else, feel free to ask. Happy coding!</p>
+</blockquote>
+<p>For the full text: <a
+href="https://wolfgangspahn.github.io/ChatGPTCoProgramming.pdf">click
+here</a></p>
+</body>
+</html>
