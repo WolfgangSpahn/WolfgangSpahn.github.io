@@ -195,46 +195,63 @@ width="300" alt="How GPT-4 imagines its collaboration role." />
 role.</figcaption>
 </figure>
 <h1 id="introduction">Introduction</h1>
-<p>AI is a great tool for software developers in answering questions
-about knowledge, configuration and how to use xyz package. Beyond that,
-it can quickly become frustrating. A lot of research has been done in
-2023 to improve AI’s reasoning skills. Good results can be achieved by
-going step by step. Just adding “do this step by step” already shows
-better results. But the more you guide it towards the final goal and are
-able to check the intermediate answers, the more impressive the final
-result will be. There are various ways of doing this automatically. But
-using it in a direct dialogue improves the result a lot.</p>
-<p>To illustrate how far you can get, I have put together this dialogue.
-The task is: Let’s make a graph spring layout function for NetworkX. The
-built-in function is not very impressive, and other standalone Python
-packages require C++ or Rust binaries. How can we get this quickly from
-AI? Asking directly does not help. It gives us a suggestion that barely
-works.</p>
-<p>So let’s go step by step like this</p>
+<p>Large language models like ChatGPT are a great tool for software
+developers to quickly get code snippets, information about fixes,
+configuration requirements or how to use xyz package in general.
+Everything that is stored as code, documented as text, or discussed on
+forums like stackoverflow is now nicely available in dialogue form. But
+how do you approach new ideas with AI? Just asking often fails and
+becomes frustrating. You just get the usual fuzzy mainstream answer or
+even a hallucination.</p>
+<p>Much research has been done in 2023 to improve such reasoning,
+planning and extrapolation skills in AI. The undeniable success of
+improving reasoning by simply adding “just go step be step” gave the
+right hint. Since then, many different methods of orchestrating
+step-by-step convergence towards a final answer could unlock these
+buried capabilities of LLMs, such as Prompt Breeder, Chain-of-Thought
+(CoT), Zero-shot CoT, Program-of-Thoughts, AutoCoT, Automatic Prompt
+Engineer, Zero-shot prompt, Plan-and-Solve etc.. Using this findings as
+a developer opens the door to use ChatGPT as a co-programming agent for
+jointly addressing new areas.</p>
+<p>To illustrate how far you can get with this, I have put together this
+dialogue. The task is: “Let’s make a graph spring layout function for
+NetworkX for planar graphs, which is really planar”. Behind this is a
+real motivation as the NetworkX built-in function is not very
+impressive, and other standalone Python packages require C++ or Rust
+code, to be build from scratch. So it would be nice to have a numpy
+implementation for network from AI? But asking directly does not help.
+It gives us a suggestion that barely works. Not any better than the
+build in one.</p>
+<p>Following the lessons learned from research means, that we need to
+have a concept how to reach our goal, and we take one step at a time.
+This avoids cognitve overload, of AI and human:</p>
 <ul>
-<li><p>do the maths and concepts first,</p></li>
-<li><p>start with a sketch of an implementation,</p></li>
-<li><p>go one step at a time,</p>
+<li>separate the maths and concepts from coding.</li>
+<li>start with a just an implementation sketch,</li>
+<li>implement one step at a time,
 <ul>
-<li>carefully analyse the answer you get</li>
-<li>give concrete feedback what to do next</li>
+<li>carefully analyse the answer we get</li>
+<li>give concrete feedback what to do next, or where to correct</li>
+<li>carefully blend in additional complexity</li>
 </ul></li>
 </ul>
-<p>But remember, you are in the driver’s seat. You have a macro plan of
-how it might work. That’s the key. Only when you have solidified your
-base, you move on to the next level of complexity.</p>
+<p>It seams to be important to stay in the driver’s seat. Only when the
+base is solidified, we move on to the next level of complexity. The key
+is to understand that the control and top-level guidance remains on the
+human side.</p>
 <p>As you can see below, this kind of co-programming allows you to
-explore the problem, avoid hallucinations and eventually get good
+explore the problem, avoid hallucinations and ultimately get good
 results. If your plan is flawed, you will run into dead ends. The AI may
-even lead you astray. That’s fine with me, as it gives me the
-opportunity to learn about the options.</p>
-<p>It took me 22 lines of input and I got 310 lines of output, with
-about 1/3 text and 2/3 code. One direction of recent research is to find
-a way to generate even these magic lines. Let’s see!</p>
+even lead you astray. So you have to step back and think again. This is
+actually a plus for me, as it gives a chance to learn about the options
+that don’t work, even if they are following a likely path.</p>
+<p>It took 22 lines of input and gave back 310 lines, about 1/3 text and
+2/3 code. It’s a kind of magic that AI can be such a competent
+companion, which opens up a new way of developing It feels very
+rewarding and collaborative.</p>
 <p>As a nice side effect, you get documentation of the thought process
-that you would never have written down in the traditional way. All in
-all, it is a huge gain in speed and ability to reproduce your chain of
-thoughts.</p>
+that you would never have written down in the traditional way. It is a
+huge gain in speed and ability to surface your train of thought.</p>
 <p>Happy hacking!</p>
 <h1 id="dialog">Dialog</h1>
 <p><strong>ME</strong>: Hey AI! I’d like to solve a programming problem
